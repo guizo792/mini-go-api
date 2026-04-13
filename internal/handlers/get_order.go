@@ -23,16 +23,16 @@ func GetOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var database *tools.DatabaseInterface
-	database, err = tools.NewDatabase()
+	var database tools.DatabaseInterface
+	database, err = tools.NewDatabase(false)
 	if err != nil {
 		api.InternalErrorHandler(w)
 		return
 	}
 
 	var orderDetails *tools.OrderDetails
-	orderDetails = (*database).GetUserOrder(params.Username)
-	if orderDetails == nil {
+	orderDetails, err = database.GetUserOrder(params.Username)
+	if err != nil || orderDetails == nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
 		return

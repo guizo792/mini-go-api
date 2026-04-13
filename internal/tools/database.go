@@ -17,19 +17,24 @@ type OrderDetails struct {
 }
 
 type DatabaseInterface interface {
-	GetUserLoginDetails(username string) *LoginDetails
-	GetUserOrder(username string) *OrderDetails
+	GetUserLoginDetails(username string) (*LoginDetails, error)
+	GetUserOrder(username string) (*OrderDetails, error)
 	SetupDatabase() error
 }
 
-func NewDatabase() (*DatabaseInterface, error) {
-	var database DatabaseInterface = &mockDb{}
+func NewDatabase(useMock bool) (DatabaseInterface, error) {
+	var db DatabaseInterface
+	if useMock {
+		db = &mockDb{}
+	} else {
+		db = &postgresDb{}
+	}
 
-	var err error = database.SetupDatabase()
+	var err error = db.SetupDatabase()
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	return &database, nil
+	return db, nil
 }

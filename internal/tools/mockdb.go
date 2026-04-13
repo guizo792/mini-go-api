@@ -40,37 +40,37 @@ var mockOrderDetails = map[string]OrderDetails {
 	},
 }
 
-func (d *mockDb) GetUserLoginDetails(username string) *LoginDetails {
+func (d *mockDb) GetUserLoginDetails(username string) (*LoginDetails, error) {
 	// Simulate DB call
 	time.Sleep(time.Second * 1)
 
 	data, ok := mockLoginDetails[username]
 	if !ok {
-		return nil
+		return nil, nil
 	}
 
 	log.WithFields(log.Fields{
 		"data": data,
 	}).Info("Retrieved User Data from DB")
 
-	return &data
+	return &data, nil
 }
 
-func (d *mockDb) GetUserOrder(username string) *OrderDetails {
+func (d *mockDb) GetUserOrder(username string) (*OrderDetails, error) {
 	// Simulate DB call
 	time.Sleep(time.Second * 1)
 
 	data, ok := mockOrderDetails[username]
 
 	if !ok {
-		return nil
+		return nil, nil
 	}
 
 	log.WithFields(log.Fields{
 		"data": data,
 	}).Info("Retrieved Order Data from DB")
 
-	return &data
+	return &data, nil
 }
 
 func (d *mockDb) SetupDatabase() error {
