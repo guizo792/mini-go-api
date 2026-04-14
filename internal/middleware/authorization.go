@@ -3,6 +3,7 @@ package middleware
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/guizo792/mini-go-api/api"
 	"github.com/guizo792/mini-go-api/internal/tools"
@@ -13,8 +14,8 @@ var UnauthorizedError = errors.New("Unauthorized Access. Invalid username or tok
 
 func Authorization(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var username string = r.URL.Query().Get("username")
-		var token string = r.Header.Get("Authorization")
+		var username string = strings.TrimSpace(r.URL.Query().Get("username"))
+		var token string = strings.TrimSpace(r.Header.Get("Authorization"))
 
 		var err error
 

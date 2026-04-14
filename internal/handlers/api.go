@@ -13,6 +13,8 @@ func Handler(r *chi.Mux) {
 	r.Route("/user", func(router chi.Router) {
 		// Middleware for /order routes
 		router.Use(middleware.Authorization)
+		router.Use(middleware.Recovery)
+		router.Use(middleware.Logging)
 		router.Get("/orders", GetOrder)
 	})
 }
