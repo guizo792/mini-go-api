@@ -4,9 +4,17 @@ import (
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
 	"github.com/guizo792/mini-go-api/internal/middleware"
+	"github.com/guizo792/mini-go-api/internal/tools"
 )
 
-func Handler(r *chi.Mux) {
+func Handler(r *chi.Mux) error {
+	db, err := tools.NewDatabase(false)
+	if err != nil {
+		return err
+	}
+
+	orderHandler := OrderHandler{DB: db}
+
 	// Global middleware
 	r.Use(chimiddle.StripSlashes)
 
@@ -15,6 +23,8 @@ func Handler(r *chi.Mux) {
 		router.Use(middleware.Authorization)
 		router.Use(middleware.Recovery)
 		router.Use(middleware.Logging)
-		router.Get("/orders", GetOrder)
+		router.Get("/orders", orderHandler.GetOrder)
 	})
+
+	return nil
 }
